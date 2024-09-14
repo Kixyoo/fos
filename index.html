@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon">
+    <title>Check List Diário de Limpeza</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        // Função para inserir a data atual no campo "Data Emissão"
+        function setDataEmissao() {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            const currentDate = `${day}/${month}/${year}`;
+            document.getElementById('data-emissao').value = currentDate;
+        }
+
+        // Função para imprimir o formulário
+        function imprimirForm() {
+            window.print();
+        }
+
+        // Função para adicionar uma nova atividade
+        function adicionarAtividade() {
+            const tableBody = document.getElementById('checklistTableBody');
+            
+            // Criar uma nova linha
+            const newRow = document.createElement('tr');
+
+            // Coluna para selecionar a atividade
+            const atividadeCell = document.createElement('td');
+            const atividadeSelect = document.createElement('select');
+            atividadeSelect.name = 'atividade_select[]';
+            const options = ['Limpeza do piso e ralo', 'Limpeza das paredes', 'Limpeza dos equipamentos', 'Outra atividade'];
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                atividadeSelect.appendChild(option);
+            });
+            atividadeCell.appendChild(atividadeSelect);
+            newRow.appendChild(atividadeCell);
+
+            // Coluna para checkbox "Realizada"
+            const realizadaCell = document.createElement('td');
+            const realizadaCheckbox = document.createElement('input');
+            realizadaCheckbox.type = 'checkbox';
+            realizadaCheckbox.name = 'realizada[]';
+            realizadaCell.appendChild(realizadaCheckbox);
+            newRow.appendChild(realizadaCell);
+
+            // Coluna para checkbox "Não Realizada"
+            const naoRealizadaCell = document.createElement('td');
+            const naoRealizadaCheckbox = document.createElement('input');
+            naoRealizadaCheckbox.type = 'checkbox';
+            naoRealizadaCheckbox.name = 'nao_realizada[]';
+            naoRealizadaCell.appendChild(naoRealizadaCheckbox);
+            newRow.appendChild(naoRealizadaCell);
+
+            // Coluna para quantidade
+            const quantidadeCell = document.createElement('td');
+            const quantidadeInput = document.createElement('input');
+            quantidadeInput.type = 'number';
+            quantidadeInput.name = 'quantidade[]';
+            quantidadeInput.min = '0';
+            quantidadeInput.placeholder = '';
+            quantidadeCell.appendChild(quantidadeInput);
+            newRow.appendChild(quantidadeCell);
+
+            // Adiciona a nova linha à tabela
+            tableBody.appendChild(newRow);
+        }
+
+        // Chama a função ao carregar a página
+        window.onload = function() {
+            setDataEmissao();
+        };
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="https://storage.googleapis.com/ecdt-logo-saida/b984c20d17974aa803175319e21a9392fc849ffd0dcab5e565ee84190fb4a448/SERIS--SERVICOS-TECNICOS-INDUSTRIAIS-LTDA.webp" alt="Logo" class="logo">
+            <h1>CHECK LIST DIÁRIO DE LIMPEZA/HIGIENIZAÇÃO</h1>
+            <div class="form-header">
+                <label for="codigo">Código:</label>
+                <input type="text" id="codigo" value="FQ 003 CL" readonly>
+
+                <label for="revisao">Revisão:</label>
+                <input type="text" id="revisao" value="73829" readonly>
+
+                <label for="data-emissao">Data Emissão:</label>
+                <input type="text" id="data-emissao" readonly>
+            </div>
+        </div>
+    </header>
+
+    <form id="checklistForm">
+        <div class="form-section">
+            <label for="setor-responsavel">Setor Responsável:</label>
+            <select id="setor-responsavel" name="setor_responsavel" required>
+                <option value="" disabled selected></option>
+                <option value="setor1">Lavatório Rocher</option>
+                <option value="setor2">Lavatório Nutella</option>
+                <option value="setor3">Lavatório Kinder</option>
+                <option value="setor3">Lavatório OVO</option>
+                <!-- Adicione mais setores conforme necessário -->
+            </select>
+
+            <label for="periodo">Período:</label>
+            <input type="text" id="periodo" name="periodo" required>
+        </div>
+
+        <table id="checklistTable">
+            <thead>
+                <tr>
+                    <th>ATIVIDADE</th>
+                    <th>REALIZADA</th>
+                    <th>NÃO REALIZADA</th>
+                    <th>QUANTIDADE</th>
+                </tr>
+            </thead>
+            <tbody id="checklistTableBody">
+                <tr>
+                    <td>
+                        <select name="atividade_select[]">
+                            <option value="Limpeza do piso e ralo">Limpeza do piso e ralo</option>
+                            <option value="Limpeza das paredes">Limpeza das paredes</option>
+                            <option value="Limpeza dos equipamentos">Limpeza dos equipamentos</option>
+                            <option value="Outra atividade">Outra atividade</option>
+                        </select>
+                    </td>
+                    <td><input type="checkbox" name="realizada[]"></td>
+                    <td><input type="checkbox" name="nao_realizada[]"></td>
+                    <td><input type="number" name="quantidade[]" min="0" placeholder=""></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="button" onclick="adicionarAtividade()">Adicionar Atividade</button>
+
+        <div class="form-section">
+            <label for="observacoes">Observações:</label>
+            <textarea id="observacoes" name="observacoes" rows="4" placeholder=""></textarea>
+        </div>
+
+        <div class="form-section">
+            <label>Responsável pelas verificações:</label>
+            <div class="responsaveis">
+                <div>
+                    <label for="responsavel_turno_a">Turno A:</label>
+                    <input type="text" id="responsavel_turno_a" name="responsavel_turno_a">
+                </div>
+                <div>
+                    <label for="responsavel_turno_b">Turno B:</label>
+                    <input type="text" id="responsavel_turno_b" name="responsavel_turno_b">
+                </div>
+                <div>
+                    <label for="responsavel_turno_c">Turno C:</label>
+                    <input type="text" id="responsavel_turno_c" name="responsavel_turno_c">
+                </div>
+            </div>
+        </div>
+
+        <button type="button" onclick="imprimirForm()">Imprimir</button>
+    </form>
+</body>
+</html>
